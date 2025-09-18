@@ -1,4 +1,4 @@
-import { Calendar, ChevronDown, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, ChevronDown, Home, Inbox, Search, Settings, Trophy } from "lucide-react"
 
 import {
   Sidebar,
@@ -18,43 +18,33 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collap
 // Menu items.
 const items = [
   {
-    title: "Home",
-    url: "#",
+    title: "Dashboard",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
+    title: "Mails",
+    url: "/mails",
     icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ]
 
 const items2 = [
-    {
-        title: "Support",
-        url: "#",
-        icon: Home,
-    },
-    {
-        title: "Feedback",
-        url: "#",
-        icon: Home,
-    },
+  {
+    title: "Trainingszeiten",
+    url: "/training-times",
+    icon: Calendar,
+  },
+  {
+    title: "Turnierinfo",
+    url: "/prank",
+    icon: Trophy,
+  },
+  {
+    title: "Settings",
+    url: "/prank",
+    icon: Settings,
+  },
 ]
 
 export function AppSidebar() {
@@ -62,7 +52,7 @@ export function AppSidebar() {
     <Sidebar side="left" collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menü</SidebarGroupLabel>
+          <SidebarGroupLabel>Übersicht</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -82,7 +72,7 @@ export function AppSidebar() {
         <SidebarGroup>
             <SidebarGroupLabel asChild>
             <CollapsibleTrigger>
-                Help
+                Bearbeiten
                 <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
             </CollapsibleTrigger>
             </SidebarGroupLabel>

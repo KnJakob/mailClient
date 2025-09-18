@@ -9,9 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrainingTimesRouteImport } from './routes/training-times'
+import { Route as PrankRouteImport } from './routes/prank'
 import { Route as MailsRouteImport } from './routes/mails'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TrainingTimesRoute = TrainingTimesRouteImport.update({
+  id: '/training-times',
+  path: '/training-times',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrankRoute = PrankRouteImport.update({
+  id: '/prank',
+  path: '/prank',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MailsRoute = MailsRouteImport.update({
   id: '/mails',
   path: '/mails',
@@ -26,31 +38,53 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/mails': typeof MailsRoute
+  '/prank': typeof PrankRoute
+  '/training-times': typeof TrainingTimesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/mails': typeof MailsRoute
+  '/prank': typeof PrankRoute
+  '/training-times': typeof TrainingTimesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/mails': typeof MailsRoute
+  '/prank': typeof PrankRoute
+  '/training-times': typeof TrainingTimesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mails'
+  fullPaths: '/' | '/mails' | '/prank' | '/training-times'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mails'
-  id: '__root__' | '/' | '/mails'
+  to: '/' | '/mails' | '/prank' | '/training-times'
+  id: '__root__' | '/' | '/mails' | '/prank' | '/training-times'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   MailsRoute: typeof MailsRoute
+  PrankRoute: typeof PrankRoute
+  TrainingTimesRoute: typeof TrainingTimesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/training-times': {
+      id: '/training-times'
+      path: '/training-times'
+      fullPath: '/training-times'
+      preLoaderRoute: typeof TrainingTimesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prank': {
+      id: '/prank'
+      path: '/prank'
+      fullPath: '/prank'
+      preLoaderRoute: typeof PrankRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mails': {
       id: '/mails'
       path: '/mails'
@@ -71,6 +105,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   MailsRoute: MailsRoute,
+  PrankRoute: PrankRoute,
+  TrainingTimesRoute: TrainingTimesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
