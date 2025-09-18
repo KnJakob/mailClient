@@ -1,4 +1,4 @@
-import { Calendar, ChevronDown, Home, Inbox, Search, Settings, Trophy } from "lucide-react"
+import { Archive, Calendar, ChevronDown, Home, Inbox, Search, Send, Settings, Trophy, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -16,20 +16,30 @@ import { Link } from "@tanstack/react-router"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
 
 // Menu items.
-const items = [
+const mail_items = [
   {
     title: "Dashboard",
     url: "/",
     icon: Home,
   },
   {
-    title: "Mails",
+    title: "Eingegangen",
     url: "/mails",
     icon: Inbox,
   },
+  {
+    title: "Gesendet",
+    url: "/prank",
+    icon: Send,
+  },
+  {
+    title: "Entwürfe",
+    url: "/prank",
+    icon: Archive,
+  },
 ]
 
-const items2 = [
+const club_items = [
   {
     title: "Trainingszeiten",
     url: "/training-times",
@@ -41,9 +51,9 @@ const items2 = [
     icon: Trophy,
   },
   {
-    title: "Settings",
+    title: "Trainer",
     url: "/prank",
-    icon: Settings,
+    icon: Users,
   },
 ]
 
@@ -52,10 +62,10 @@ export function AppSidebar() {
     <Sidebar side="left" collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Übersicht</SidebarGroupLabel>
+          <SidebarGroupLabel>Mailbox</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {mail_items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
@@ -72,14 +82,14 @@ export function AppSidebar() {
         <SidebarGroup>
             <SidebarGroupLabel asChild>
             <CollapsibleTrigger>
-                Bearbeiten
+                Verein
                 <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
             </CollapsibleTrigger>
             </SidebarGroupLabel>
             <CollapsibleContent>
             <SidebarGroupContent>
                 <SidebarMenu>
-                {items2.map((item) => (
+                {club_items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                         <a href={item.url}>

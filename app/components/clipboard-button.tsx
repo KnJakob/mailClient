@@ -1,23 +1,13 @@
-"use client";
-
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 import { Clipboard, ClipboardCheck } from "lucide-react";
 
-export function ClipboardButton() {
+export function ClipboardButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      // Datei aus dem public/ Ordner laden
-      const res = await fetch("/trainingszeiten.txt");
-      if (!res.ok) throw new Error("Datei konnte nicht geladen werden");
-
-      const text = await res.text();
-
-      // Inhalt ins Clipboard schreiben
       await navigator.clipboard.writeText(text);
-
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
