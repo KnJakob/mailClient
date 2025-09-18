@@ -35,7 +35,7 @@ function Home() {
 
   return (
     <div>
-    <button
+    <Button
       type="button"
       onClick={() => {
         updateCount({ data: 1 }).then(() => {
@@ -44,7 +44,8 @@ function Home() {
       }}
     >
       Add 1 to {state}?
-    </button>
+    </Button>
+    <p></p>
     <Button>
       <Link to="/mails">Click here!</Link>
     </Button>
