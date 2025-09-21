@@ -1,20 +1,27 @@
 import * as fs from "node:fs";
-import { createServerFn } from "@tanstack/react-start"; // oder @tanstack/react-router/start
+import { createServerFn } from "@tanstack/react-start";
 
 const filePath = "./env/trainer.txt";
 
-async function readTrainingTimes() {
-  return await fs.promises.readFile(filePath, "utf-8").catch(() => "Fehler bei der Datei");
+async function readTrainers() {
+  try {
+    const content = await fs.promises.readFile(filePath, "utf-8");
+    const trainers = content.split(",").map(trainer => trainer.trim()).filter(Boolean);
+    return trainers;
+  } catch (error) {
+    return [];
+  }
 }
 
-export const getTrainingTimes = createServerFn({
+export const getTrainers = createServerFn({
   method: "GET",
 }).handler(() => {
-  return readTrainingTimes();
+  return readTrainers();
 });
 
-export const updateTrainingTimes = createServerFn({ method: "POST" })
-  .validator((text: string) => text) // validiert die Eingabe
+export const updateTrainers = createServerFn({ method: "POST" })
+  .validator((trainers: string[]) => trainers)
   .handler(async ({ data }) => {
-    await fs.promises.writeFile(filePath, data, "utf-8");
+    const content = data.join(", ");
+    await fs.promises.writeFile(filePath, content, "utf-8");
   });

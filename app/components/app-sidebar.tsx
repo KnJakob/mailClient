@@ -52,7 +52,7 @@ const club_items = [
   },
   {
     title: "Trainer",
-    url: "/prank",
+    url: "/trainer",
     icon: Users,
   },
 ]
