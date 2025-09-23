@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ClipboardButton } from "./clipboard-button";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from "./ui/card";
+import { EditDialog } from "./edit-dialog";
 
 export function TrainingCard({content}: {content:string}) {
     return (
@@ -16,7 +17,7 @@ export function TrainingCard({content}: {content:string}) {
           {content ?? "Daten nicht geladen"}
         </CardContent>
         <CardFooter>
-            <Button variant="outline"><Link to="/prank">Bearbeiten</Link></Button>
+            <EditDialog text={content}/>
         </CardFooter>
     </Card>
     )
