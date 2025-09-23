@@ -1,11 +1,10 @@
-import { Link } from "@tanstack/react-router";
 import { ClipboardButton } from "./clipboard-button";
-import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from "./ui/card";
 import { EditDialog } from "./edit-dialog";
 import { updateTrainingTimes } from "@/lib/training-times";
 
-export function TrainingCard({content}: {content:string}) {
+export function TrainingCard({content, collapsed}: {content:string, collapsed: boolean}) {
+
     return (
       <Card>
         <CardHeader>
@@ -15,7 +14,10 @@ export function TrainingCard({content}: {content:string}) {
           </CardAction>
         </CardHeader>
         <CardContent>
-          {content ?? "Daten nicht geladen"}
+          {collapsed 
+            ? `${content?.slice(0, 12) || ""}...`
+            : content ?? "Daten nicht geladen"
+          }
         </CardContent>
         <CardFooter>
           <EditDialog 

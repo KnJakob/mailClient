@@ -11,7 +11,7 @@ function RouteComponent() {
   const data = Route.useLoaderData()
   return (
     <div>
-      <TrainingCard content={data}/>
+      <TrainingCard content={data} collapsed={false} />
     </div>
   )
 }
