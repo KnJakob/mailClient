@@ -3,6 +3,7 @@ import { ClipboardButton } from "./clipboard-button";
 import { Button } from "./ui/button";
 import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from "./ui/card";
 import { EditDialog } from "./edit-dialog";
+import { updateTrainingTimes } from "@/lib/training-times";
 
 export function TrainingCard({content}: {content:string}) {
     return (
@@ -17,7 +18,14 @@ export function TrainingCard({content}: {content:string}) {
           {content ?? "Daten nicht geladen"}
         </CardContent>
         <CardFooter>
-            <EditDialog text={content}/>
+          <EditDialog 
+            text={content}
+            title="Trainingszeiten bearbeiten"
+            description="Bearbeiten Sie hier die Trainingszeiten."
+            placeholder={content}
+            label="Trainingszeiten"
+            onSave={async (text) => await updateTrainingTimes({ data: text })}
+          />
         </CardFooter>
     </Card>
     )

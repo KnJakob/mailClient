@@ -4,9 +4,12 @@ import { Card, CardHeader, CardTitle, CardAction, CardContent, CardFooter } from
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Button } from "./ui/button";
 import { Link } from "@tanstack/react-router";
+import { EditDialog } from "./edit-dialog";
+import { updateTrainers } from "@/lib/trainer";
 
 export function TrainerCard({ trainers }: { trainers: string[] }) {
   const [selectedTrainer, setSelectedTrainer] = useState<string>("");
+  const trainersAsString = trainers.join(",");
   
   return (
     <Card>
@@ -36,7 +39,14 @@ export function TrainerCard({ trainers }: { trainers: string[] }) {
         )}
       </CardContent>
       <CardFooter>
-          <Button variant="outline"><Link to="/prank">Bearbeiten</Link></Button>
+        <EditDialog 
+          text={trainersAsString}
+          title="Trainer bearbeiten"
+          description="Bearbeiten Sie hier die Trainer, getrennt durch Kommata."
+          placeholder={trainersAsString}
+          label="Trainer"
+          onSave={async (text) => await updateTrainers({ data: text.split(',') })}
+        />
       </CardFooter>
     </Card>
   );
