@@ -11,7 +11,7 @@ export function TrainingCard({content}: {content:string}) {
         <CardHeader>
           <CardTitle>Aktuelle Trainingszeiten</CardTitle>
           <CardAction>
-            <ClipboardButton text={content}/>
+            <ClipboardButton text={`Wir bieten aktuell folgende Trainingszeiten an:\n${content}`}/>
           </CardAction>
         </CardHeader>
         <CardContent>
