@@ -1,4 +1,4 @@
-import { Archive, Calendar, ChevronDown, Home, Inbox, Search, Send, Settings, Trophy, Users } from "lucide-react"
+import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Search, Send, Settings, Trophy, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -55,6 +55,11 @@ const club_items = [
     url: "/trainer",
     icon: Users,
   },
+  {
+    title: "Neuzugang",
+    url: "/freshman",
+    icon: PartyPopper,
+  }
 ]
 
 export function AppSidebar() {

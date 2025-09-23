@@ -13,6 +13,7 @@ import { Route as TrainingTimesRouteImport } from './routes/training-times'
 import { Route as TrainerRouteImport } from './routes/trainer'
 import { Route as PrankRouteImport } from './routes/prank'
 import { Route as MailsRouteImport } from './routes/mails'
+import { Route as FreshmanRouteImport } from './routes/freshman'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TrainingTimesRoute = TrainingTimesRouteImport.update({
@@ -35,6 +36,11 @@ const MailsRoute = MailsRouteImport.update({
   path: '/mails',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FreshmanRoute = FreshmanRouteImport.update({
+  id: '/freshman',
+  path: '/freshman',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/freshman': typeof FreshmanRoute
   '/mails': typeof MailsRoute
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/freshman': typeof FreshmanRoute
   '/mails': typeof MailsRoute
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/freshman': typeof FreshmanRoute
   '/mails': typeof MailsRoute
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
@@ -65,14 +74,28 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/mails' | '/prank' | '/trainer' | '/training-times'
+  fullPaths:
+    | '/'
+    | '/freshman'
+    | '/mails'
+    | '/prank'
+    | '/trainer'
+    | '/training-times'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/mails' | '/prank' | '/trainer' | '/training-times'
-  id: '__root__' | '/' | '/mails' | '/prank' | '/trainer' | '/training-times'
+  to: '/' | '/freshman' | '/mails' | '/prank' | '/trainer' | '/training-times'
+  id:
+    | '__root__'
+    | '/'
+    | '/freshman'
+    | '/mails'
+    | '/prank'
+    | '/trainer'
+    | '/training-times'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FreshmanRoute: typeof FreshmanRoute
   MailsRoute: typeof MailsRoute
   PrankRoute: typeof PrankRoute
   TrainerRoute: typeof TrainerRoute
@@ -109,6 +132,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MailsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/freshman': {
+      id: '/freshman'
+      path: '/freshman'
+      fullPath: '/freshman'
+      preLoaderRoute: typeof FreshmanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -121,6 +151,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FreshmanRoute: FreshmanRoute,
   MailsRoute: MailsRoute,
   PrankRoute: PrankRoute,
   TrainerRoute: TrainerRoute,
