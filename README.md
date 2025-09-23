@@ -8,5 +8,11 @@ vite dev
 ```
 or use the vscode Task.
 
+Add the environment variables:
+>/env/trainer.txt (Trainer seperated by ',')
+>
+>/env/trainingzeiten.txt (training-times as String)
+>
+>.env (GMX_USERNAME, GMX_PASSWORD)
+
 To-Do:
-- im file von training-times stehen nur die wirklichen Zeiten. die erste line sollte dann nur beim clipboard hinzugefügt werden.
