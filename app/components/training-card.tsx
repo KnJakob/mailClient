@@ -15,7 +15,7 @@ export function TrainingCard({content, collapsed}: {content:string, collapsed: b
         </CardHeader>
         <CardContent>
           {collapsed 
-            ? `${content?.slice(0, 18) || ""}...`
+            ? `${content?.slice(0, 26) || ""}...`
             : content ?? "Daten nicht geladen"
           }
         </CardContent>

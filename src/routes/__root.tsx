@@ -40,12 +40,12 @@ function RootComponent() {
     <RootDocument>
      <SidebarProvider>
         <AppSidebar />
-        <main className="flex-1 flex flex-col w-full">
+        <main className="flex-1 flex flex-col w-full mt-4">
           {/* Header mit Sidebar Trigger */}
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b px-4">
-            <SidebarTrigger className="-ml-1" />
+          <header className="flex mb-4 h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b px-4">
+            <SidebarTrigger className="-ml-1 mb-4" />
             <div className="flex-1">
-              <h1 className="text-lg font-semibold">Mail Client</h1>
+              <p className="text-xl font-semibold mb-4">Mail Client</p>
             </div>
           </header>
           

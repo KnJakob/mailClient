@@ -20,7 +20,7 @@ function RouteComponent() {
   const { trainingTimes, trainers, freshmanText } = Route.useLoaderData()
 
   return (
-    <div className='w-64'>
+    <div>
       <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText} />
     </div>
   )
