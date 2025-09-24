@@ -1,10 +1,8 @@
-import { TrainerCard } from '@/components/trainer-card'
-import { TrainingCard } from '@/components/training-card'
 import { getTrainingTimes } from '@/lib/training-times'
 import { getTrainers } from '@/lib/trainer'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { FreshmanCard } from '@/components/freshman-card'
+import { createFileRoute } from '@tanstack/react-router'
 import { getFreshmanText } from '@/lib/freshman'
+import { MailSidebar } from '@/components/mail-sidebar'
 
 export const Route = createFileRoute('/mails')({
   component: RouteComponent,
@@ -23,9 +21,7 @@ function RouteComponent() {
 
   return (
     <div className='w-64'>
-      <TrainingCard content={trainingTimes} collapsed={true} />
-      <TrainerCard trainers={trainers} />
-      <FreshmanCard content={freshmanText} collapsed={true} />
+      <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText} />
     </div>
   )
 }
