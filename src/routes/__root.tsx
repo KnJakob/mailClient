@@ -22,7 +22,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Mail Client - Clubs',
       },
     ],
     links: [
@@ -30,6 +30,10 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: appCss,
       },
+      {
+        rel: 'icon',
+        href: '/mailIcon.webp',
+    },
     ],
   }),
   component: RootComponent,
