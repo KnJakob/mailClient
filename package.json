@@ -27,6 +27,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "imap": "^0.8.19",
+    "imapflow": "^1.0.197",
     "lucide-react": "^0.544.0",
     "mailparser": "^3.7.4",
     "node-imap": "^0.9.6",

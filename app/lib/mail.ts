@@ -1,0 +1,100 @@
+import { ImapFlow } from 'imapflow'
+import { simpleParser } from 'mailparser'
+
+// Types
+export interface EmailData {
+  id: number
+  subject: string
+  from: string
+  to: string
+  date: Date
+  body: string
+  html?: string
+  attachments: Array<{
+    filename: string
+    contentType: string
+    size: number
+  }>
+}
+
+interface FetchEmailsParams {
+  beginFetch: number
+  endFetch: number
+}
+
+// Verbindung zu GMX
+const createImapClient = () => {
+  const username = process.env.GMX_USERNAME
+  const password = process.env.GMX_PASSWORD
+
+  if (!username || !password) {
+    throw new Error('GMX_USERNAME und GMX_PASSWORD müssen gesetzt sein')
+  }
+
+  return new ImapFlow({
+    host: 'imap.gmx.net',
+    port: 993,
+    secure: true,
+    auth: { user: username, pass: password }
+  })
+}
+
+// Mails abrufen mit imapflow
+export const fetchEmailsFromImap = async (
+  beginFetch: number = 1,
+  endFetch: number = 50
+): Promise<EmailData[]> => {
+  const client = createImapClient()
+  const emails: EmailData[] = []
+
+  try {
+    await client.connect()
+
+    // Posteingang öffnen
+    const lock = await client.getMailboxLock('INBOX')
+    if (!client.mailbox) throw new Error("Mailbox not available")
+
+    try {
+      const total = client.mailbox.exists
+      if (total === 0) return []
+
+      const pageSize = endFetch - beginFetch + 1
+      const offset = beginFetch - 1 // 0-basiert
+
+      // Bereich validieren und anpassen
+      const safeEnd = total - offset
+      const safeBegin = Math.max(1, safeEnd - pageSize + 1)
+
+
+      // Nachrichten abrufen
+      for await (const msg of client.fetch(
+        { seq: `${safeBegin}:${safeEnd}` },
+        { source: true } // komplette Nachricht als Stream
+      )) {
+        const parsed = await simpleParser(msg.source)
+
+        emails.push({
+          id: msg.uid, // stabile ID
+          subject: parsed.subject || 'No Subject',
+          from: parsed.from?.text || 'Unknown Sender',
+          to: parsed.to?.text || 'Unknown Recipient',
+          date: parsed.date || new Date(),
+          body: parsed.text || '',
+          html: parsed.html || undefined,
+          attachments:
+            parsed.attachments?.map(att => ({
+              filename: att.filename || 'unnamed',
+              contentType: att.contentType || 'application/octet-stream',
+              size: att.size || 0
+            })) || []
+        })
+      }
+    } finally {
+      lock.release()
+    }
+  } finally {
+    await client.logout()
+  }
+
+  return emails.sort((a, b) => b.id - a.id)
+}
