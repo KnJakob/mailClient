@@ -7,7 +7,7 @@ export interface EmailData {
   subject: string
   from: string
   to: string
-  date: Date
+  date: string
   body: string
   html?: string
   attachments: Array<{
