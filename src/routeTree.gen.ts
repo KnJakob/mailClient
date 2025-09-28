@@ -16,6 +16,7 @@ import { Route as FreshmanRouteImport } from './routes/freshman'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MailsIndexRouteImport } from './routes/mails/index'
 import { Route as MailsFavoritesRouteImport } from './routes/mails/favorites'
+import { Route as MailsUidRouteImport } from './routes/mails/$uid'
 
 const TrainingTimesRoute = TrainingTimesRouteImport.update({
   id: '/training-times',
@@ -52,6 +53,11 @@ const MailsFavoritesRoute = MailsFavoritesRouteImport.update({
   path: '/mails/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MailsUidRoute = MailsUidRouteImport.update({
+  id: '/mails/$uid',
+  path: '/mails/$uid',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
   '/training-times': typeof TrainingTimesRoute
+  '/mails/$uid': typeof MailsUidRoute
   '/mails/favorites': typeof MailsFavoritesRoute
   '/mails': typeof MailsIndexRoute
 }
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
   '/training-times': typeof TrainingTimesRoute
+  '/mails/$uid': typeof MailsUidRoute
   '/mails/favorites': typeof MailsFavoritesRoute
   '/mails': typeof MailsIndexRoute
 }
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
   '/training-times': typeof TrainingTimesRoute
+  '/mails/$uid': typeof MailsUidRoute
   '/mails/favorites': typeof MailsFavoritesRoute
   '/mails/': typeof MailsIndexRoute
 }
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/prank'
     | '/trainer'
     | '/training-times'
+    | '/mails/$uid'
     | '/mails/favorites'
     | '/mails'
   fileRoutesByTo: FileRoutesByTo
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/prank'
     | '/trainer'
     | '/training-times'
+    | '/mails/$uid'
     | '/mails/favorites'
     | '/mails'
   id:
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/prank'
     | '/trainer'
     | '/training-times'
+    | '/mails/$uid'
     | '/mails/favorites'
     | '/mails/'
   fileRoutesById: FileRoutesById
@@ -117,6 +129,7 @@ export interface RootRouteChildren {
   PrankRoute: typeof PrankRoute
   TrainerRoute: typeof TrainerRoute
   TrainingTimesRoute: typeof TrainingTimesRoute
+  MailsUidRoute: typeof MailsUidRoute
   MailsFavoritesRoute: typeof MailsFavoritesRoute
   MailsIndexRoute: typeof MailsIndexRoute
 }
@@ -172,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MailsFavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mails/$uid': {
+      id: '/mails/$uid'
+      path: '/mails/$uid'
+      fullPath: '/mails/$uid'
+      preLoaderRoute: typeof MailsUidRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrankRoute: PrankRoute,
   TrainerRoute: TrainerRoute,
   TrainingTimesRoute: TrainingTimesRoute,
+  MailsUidRoute: MailsUidRoute,
   MailsFavoritesRoute: MailsFavoritesRoute,
   MailsIndexRoute: MailsIndexRoute,
 }

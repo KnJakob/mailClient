@@ -164,41 +164,60 @@ export const getFlaggedMails = createServerFn({method: 'GET'})
   return emails.sort((a, b) => b.id - a.id)
 })
 
-// export const getMailByUID = createServerFn({method: 'POST'})
-//   .validator((data: number) => {
-//     if (typeof data !== 'number') {
-//       throw new Error('Es muss nach UID gefetcht werden')
-//     }
-//     return data
-//   })
-//   .handler(async ({ data }): Promise<EmailData> => {
-//   const client = createImapClient()
-//   let email: EmailData
+export const getMailByUID = createServerFn({method: 'POST'})
+  .validator((data: number) => {
+    if (typeof data !== 'number') {
+      throw new Error('Es muss nach UID gefetcht werden')
+    }
+    return data
+  })
+  .handler(async ({ data }): Promise<EmailData> => {
+  const client = createImapClient()
+  let email: EmailData | undefined
 
-//   try {
-//     await client.connect()
+  try {
+    await client.connect()
 
-//     // Posteingang öffnen
-//     const lock = await client.getMailboxLock('INBOX')
-//     if (!client.mailbox) throw new Error("Mailbox not available")
+    // Posteingang öffnen
+    const lock = await client.getMailboxLock('INBOX')
+    if (!client.mailbox) throw new Error("Mailbox not available")
 
-//     try {
+    try {
 
-//       // Nachrichten abrufen
-//       const email = await client.fetchOne(data, { envelope: true, source: true });
+      // Nachrichten abrufen
+      const fetched = await client.fetchOne(data, { envelope: true, source: true });
       
-//       if (!email) {
-//         throw new Error(`Mail mit UID ${data} nicht gefunden.`);
-//       }
-//     } finally {
-//       lock.release()
-//     }
-//   } catch (error) {
-//       console.error('Fehler beim Abrufen der E-Mails Favoriten:', error)
-//       throw new Error(`E-Mail-Abruf fehlgeschlagen: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`)
-//   } finally {
-//     await client.logout()
-//   }
+      if (!fetched) {
+        throw new Error(`Mail mit UID ${data} nicht gefunden.`);
+      }
 
-//   return email
-// })
+      const parsed = await simpleParser(fetched.source)
+
+      email = {
+        id: fetched.uid,
+        subject: parsed.subject || 'No Subject',
+        from: parsed.from?.text || 'Unknown Sender',
+        to: parsed.to?.text || 'Unknown Recipient',
+        date: parsed.date || new Date(),
+        body: parsed.text || '',
+        html: parsed.html || undefined,
+        attachments:
+          parsed.attachments?.map(att => ({
+            filename: att.filename || 'unnamed',
+            contentType: att.contentType || 'application/octet-stream',
+            size: att.size || 0
+          })) || []
+      }
+
+    } finally {
+      lock.release()
+    }
+  } catch (error) {
+      console.error('Fehler beim Abrufen der E-Mails Favoriten:', error)
+      throw new Error(`E-Mail-Abruf fehlgeschlagen: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`)
+  } finally {
+    await client.logout()
+  }
+
+  return email
+})

@@ -22,3 +22,4 @@ To-Do:
 - add search bar
 - Mailbox: INBOX, Gesendet, Entwürfe
 - fix: favorites zeigt nicht alle favoriten (vllt zu viele fetches sodass er abbricht?)
+- add link from data table to mail page
