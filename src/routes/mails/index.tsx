@@ -55,10 +55,13 @@ function RouteComponent() {
 
   return (
     <> 
-      {/* <MailTable emails={emails}/> */}
-      <DataTable columns={columns} data={formattedEmails} />
-    <div>
-      {/* <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText} /> */}
+    <div className='flex'>
+      <div className="flex-1">
+        <DataTable columns={columns} data={formattedEmails} />
+      </div>
+      <div className='flex-2'>
+        <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText}/>
+      </div>
     </div>
     </>
   )
