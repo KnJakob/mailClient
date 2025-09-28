@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 
 export const columns: ColumnDef<EmailData>[] = [
   {
-    accessorKey: "From",
+    accessorKey: "from",
     header: "Absender",
   },
   {

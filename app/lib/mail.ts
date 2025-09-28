@@ -1,5 +1,7 @@
+import { createServerFn } from '@tanstack/react-start'
 import { ImapFlow } from 'imapflow'
 import { simpleParser } from 'mailparser'
+import { createServer } from 'node:http'
 
 // Types
 export interface EmailData {
@@ -40,10 +42,18 @@ const createImapClient = () => {
 }
 
 // Mails abrufen mit imapflow
-export const fetchEmailsFromImap = async (
-  beginFetch: number = 1,
-  endFetch: number = 50
-): Promise<EmailData[]> => {
+export const fetchEmailsFromImap = createServerFn({method: 'POST'})
+  .validator((data: FetchEmailsParams) => {
+    if (typeof data.beginFetch !== 'number' || typeof data.endFetch !== 'number') {
+      throw new Error('beginFetch und endFetch müssen Zahlen sein')
+    }
+    if (data.beginFetch < 1 || data.endFetch < data.beginFetch) {
+      throw new Error('Ungültiger Bereich für Email-Abruf')
+    }
+    return data
+  })
+  .handler(async ({ data }): Promise<EmailData[]> => {
+  const { beginFetch = 1, endFetch = 50 } = data
   const client = createImapClient()
   const emails: EmailData[] = []
 
@@ -92,9 +102,12 @@ export const fetchEmailsFromImap = async (
     } finally {
       lock.release()
     }
+  } catch (error) {
+      console.error('Fehler beim Abrufen der E-Mails:', error)
+      throw new Error(`E-Mail-Abruf fehlgeschlagen: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`)
   } finally {
     await client.logout()
   }
 
   return emails.sort((a, b) => b.id - a.id)
-}
+})
