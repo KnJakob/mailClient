@@ -15,7 +15,7 @@ export const Route = createFileRoute('/mails')({
       getTrainingTimes(),
       getTrainers(),
       getFreshmanText(),
-      fetchEmailsFromImap(),
+      fetchEmailsFromImap({data: {beginFetch: 1, endFetch: 50}}),
     ])
     return { trainingTimes, trainers, freshmanText, emails }
   },
@@ -30,13 +30,28 @@ function formatDate(dateString) {
   return `${day}.${month}.${year}`
 }
 
+function formatFrom(fromString) {
+  // Prüfen, ob ein Name-Teil mit <...> vorhanden ist
+  const match = fromString.match(/^(.*?)\s*<(.+?)>$/)
+
+  if (match) {
+    // match[1] = Name-Teil, match[2] = Mailadresse
+    let name = match[1].trim().replace(/^"|"$/g, "") // Anführungszeichen entfernen
+    return name
+  }
+
+  // Kein Name, nur die Mailadresse -> direkt zurückgeben
+  return fromString.trim()
+}
+
 function RouteComponent() {
   const { trainingTimes, trainers, freshmanText, emails } = Route.useLoaderData()
   
   // transform emails before passing to DataTable
   const formattedEmails = emails.map(email => ({
     ...email,
-    date: formatDate(email.date)
+    date: formatDate(email.date),
+    from: formatFrom(email.from)
   }))
 
   return (
