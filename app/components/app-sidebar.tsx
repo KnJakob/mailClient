@@ -29,7 +29,7 @@ const mail_items = [
   },
   {
     title: "Favoriten",
-    url: "/mails-favorites",
+    url: "/mails/favorites",
     icon: Star,
   },
   {

@@ -3,19 +3,18 @@ import { getTrainers } from '@/lib/trainer'
 import { createFileRoute } from '@tanstack/react-router'
 import { getFreshmanText } from '@/lib/freshman'
 import { MailSidebar } from '@/components/mail-sidebar'
-import { MailTable } from '@/components/mail-table'
-import { EmailData, fetchEmailsFromImap } from '@/lib/mail'
+import { getFlaggedMails } from '@/lib/mail'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/components/mail-table-columns'
 
-export const Route = createFileRoute('/mails')({
+export const Route = createFileRoute('/mails/favorites')({
   component: RouteComponent,
   loader: async() => {
     const [trainingTimes, trainers, freshmanText, emails] = await Promise.all([
       getTrainingTimes(),
       getTrainers(),
       getFreshmanText(),
-      fetchEmailsFromImap({data: {beginFetch: 1, endFetch: 50}}),
+      getFlaggedMails(),
     ])
     return { trainingTimes, trainers, freshmanText, emails }
   },
@@ -47,7 +46,7 @@ function formatFrom(fromString) {
 function RouteComponent() {
   const { trainingTimes, trainers, freshmanText, emails } = Route.useLoaderData()
   
-  // transform emails before passing to DataTable
+//   transform emails before passing to DataTable
   const formattedEmails = emails.map(email => ({
     ...email,
     date: formatDate(email.date),

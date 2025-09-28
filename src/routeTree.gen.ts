@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TrainingTimesRouteImport } from './routes/training-times'
 import { Route as TrainerRouteImport } from './routes/trainer'
 import { Route as PrankRouteImport } from './routes/prank'
-import { Route as MailsFavoritesRouteImport } from './routes/mails-favorites'
-import { Route as MailsRouteImport } from './routes/mails'
 import { Route as FreshmanRouteImport } from './routes/freshman'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MailsIndexRouteImport } from './routes/mails/index'
+import { Route as MailsFavoritesRouteImport } from './routes/mails/favorites'
 
 const TrainingTimesRoute = TrainingTimesRouteImport.update({
   id: '/training-times',
@@ -32,16 +32,6 @@ const PrankRoute = PrankRouteImport.update({
   path: '/prank',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MailsFavoritesRoute = MailsFavoritesRouteImport.update({
-  id: '/mails-favorites',
-  path: '/mails-favorites',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MailsRoute = MailsRouteImport.update({
-  id: '/mails',
-  path: '/mails',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FreshmanRoute = FreshmanRouteImport.update({
   id: '/freshman',
   path: '/freshman',
@@ -52,73 +42,83 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MailsIndexRoute = MailsIndexRouteImport.update({
+  id: '/mails/',
+  path: '/mails/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MailsFavoritesRoute = MailsFavoritesRouteImport.update({
+  id: '/mails/favorites',
+  path: '/mails/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/freshman': typeof FreshmanRoute
-  '/mails': typeof MailsRoute
-  '/mails-favorites': typeof MailsFavoritesRoute
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
   '/training-times': typeof TrainingTimesRoute
+  '/mails/favorites': typeof MailsFavoritesRoute
+  '/mails': typeof MailsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/freshman': typeof FreshmanRoute
-  '/mails': typeof MailsRoute
-  '/mails-favorites': typeof MailsFavoritesRoute
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
   '/training-times': typeof TrainingTimesRoute
+  '/mails/favorites': typeof MailsFavoritesRoute
+  '/mails': typeof MailsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/freshman': typeof FreshmanRoute
-  '/mails': typeof MailsRoute
-  '/mails-favorites': typeof MailsFavoritesRoute
   '/prank': typeof PrankRoute
   '/trainer': typeof TrainerRoute
   '/training-times': typeof TrainingTimesRoute
+  '/mails/favorites': typeof MailsFavoritesRoute
+  '/mails/': typeof MailsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/freshman'
-    | '/mails'
-    | '/mails-favorites'
     | '/prank'
     | '/trainer'
     | '/training-times'
+    | '/mails/favorites'
+    | '/mails'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/freshman'
-    | '/mails'
-    | '/mails-favorites'
     | '/prank'
     | '/trainer'
     | '/training-times'
+    | '/mails/favorites'
+    | '/mails'
   id:
     | '__root__'
     | '/'
     | '/freshman'
-    | '/mails'
-    | '/mails-favorites'
     | '/prank'
     | '/trainer'
     | '/training-times'
+    | '/mails/favorites'
+    | '/mails/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FreshmanRoute: typeof FreshmanRoute
-  MailsRoute: typeof MailsRoute
-  MailsFavoritesRoute: typeof MailsFavoritesRoute
   PrankRoute: typeof PrankRoute
   TrainerRoute: typeof TrainerRoute
   TrainingTimesRoute: typeof TrainingTimesRoute
+  MailsFavoritesRoute: typeof MailsFavoritesRoute
+  MailsIndexRoute: typeof MailsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -144,20 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrankRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mails-favorites': {
-      id: '/mails-favorites'
-      path: '/mails-favorites'
-      fullPath: '/mails-favorites'
-      preLoaderRoute: typeof MailsFavoritesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mails': {
-      id: '/mails'
-      path: '/mails'
-      fullPath: '/mails'
-      preLoaderRoute: typeof MailsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/freshman': {
       id: '/freshman'
       path: '/freshman'
@@ -172,17 +158,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mails/': {
+      id: '/mails/'
+      path: '/mails'
+      fullPath: '/mails'
+      preLoaderRoute: typeof MailsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mails/favorites': {
+      id: '/mails/favorites'
+      path: '/mails/favorites'
+      fullPath: '/mails/favorites'
+      preLoaderRoute: typeof MailsFavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FreshmanRoute: FreshmanRoute,
-  MailsRoute: MailsRoute,
-  MailsFavoritesRoute: MailsFavoritesRoute,
   PrankRoute: PrankRoute,
   TrainerRoute: TrainerRoute,
   TrainingTimesRoute: TrainingTimesRoute,
+  MailsFavoritesRoute: MailsFavoritesRoute,
+  MailsIndexRoute: MailsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
