@@ -1,4 +1,4 @@
-import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Search, Send, Settings, Star, Trophy, Users } from "lucide-react"
+import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Send, Star, Trophy, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -6,12 +6,10 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Button } from "./ui/button"
 import { Link } from "@tanstack/react-router"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
 
@@ -78,10 +76,10 @@ export function AppSidebar() {
               {mail_items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -102,10 +100,10 @@ export function AppSidebar() {
                 {club_items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                        <a href={item.url}>
+                        <Link to={item.url}>
                         <item.icon />
                         <span>{item.title}</span>
-                        </a>
+                        </Link>
                     </SidebarMenuButton>
                     </SidebarMenuItem>
                 ))}
