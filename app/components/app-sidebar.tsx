@@ -1,4 +1,4 @@
-import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Search, Send, Settings, Trophy, Users } from "lucide-react"
+import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Search, Send, Settings, Star, Trophy, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -26,6 +26,11 @@ const mail_items = [
     title: "Eingegangen",
     url: "/mails",
     icon: Inbox,
+  },
+  {
+    title: "Favoriten",
+    url: "/mails-favorites",
+    icon: Star,
   },
   {
     title: "Gesendet",
