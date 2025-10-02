@@ -23,3 +23,4 @@ To-Do:
 - Mailbox: INBOX, Gesendet, Entwürfe
 - fix: favorites zeigt nicht alle favoriten (vllt zu viele fetches sodass er abbricht?)
 - add link from data table to mail page
+- mailfetches von source auf envelope ändern: fetched dann nur metadaten und ist wesentlich schneller

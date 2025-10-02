@@ -5,7 +5,7 @@ import { createServer } from 'node:http'
 
 // Types
 export interface EmailData {
-  id: number
+  id: number 
   subject: string
   from: string
   to: string
@@ -84,7 +84,7 @@ export const fetchEmailsFromImap = createServerFn({method: 'POST'})
         const parsed = await simpleParser(msg.source)
 
         emails.push({
-          id: msg.uid, // stabile ID
+          id: msg.seq, // stabile ID
           subject: parsed.subject || 'No Subject',
           from: parsed.from?.text || 'Unknown Sender',
           to: parsed.to?.text || 'Unknown Recipient',
@@ -136,7 +136,7 @@ export const getFlaggedMails = createServerFn({method: 'GET'})
         const parsed = await simpleParser(msg.source)
 
         emails.push({
-          id: msg.uid, // stabile ID
+          id: msg.seq, // stabile ID
           subject: parsed.subject || 'No Subject',
           from: parsed.from?.text || 'Unknown Sender',
           to: parsed.to?.text || 'Unknown Recipient',
@@ -164,10 +164,10 @@ export const getFlaggedMails = createServerFn({method: 'GET'})
   return emails.sort((a, b) => b.id - a.id)
 })
 
-export const getMailByUID = createServerFn({method: 'POST'})
+export const getMailBySeq = createServerFn({method: 'POST'})
   .validator((data: number) => {
     if (typeof data !== 'number') {
-      throw new Error('Es muss nach UID gefetcht werden')
+      throw new Error('Es muss nach Seq Nummer gefetcht werden')
     }
     return data
   })
@@ -185,10 +185,10 @@ export const getMailByUID = createServerFn({method: 'POST'})
     try {
 
       // Nachrichten abrufen
-      const fetched = await client.fetchOne(data, { envelope: true, source: true });
+      const fetched = await client.fetchOne(data, { source: true });
       
       if (!fetched) {
-        throw new Error(`Mail mit UID ${data} nicht gefunden.`);
+        throw new Error(`Mail mit Seq Nummer ${data} nicht gefunden.`);
       }
 
       const parsed = await simpleParser(fetched.source)
@@ -264,7 +264,7 @@ export const fetchEmailsSent = createServerFn({method: 'POST'})
         const parsed = await simpleParser(msg.source)
 
         emails.push({
-          id: msg.uid, // stabile ID
+          id: msg.seq, // stabile ID
           subject: parsed.subject || 'No Subject',
           from: parsed.from?.text || 'Unknown Sender',
           to: parsed.to?.text || 'Unknown Recipient',

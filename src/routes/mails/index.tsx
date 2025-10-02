@@ -3,9 +3,8 @@ import { getTrainers } from '@/lib/trainer'
 import { createFileRoute } from '@tanstack/react-router'
 import { getFreshmanText } from '@/lib/freshman'
 import { MailSidebar } from '@/components/mail-sidebar'
-import { EmailData, fetchEmailsFromImap } from '@/lib/mail'
-import { DataTable } from '@/components/ui/data-table'
-import { columns } from '@/components/mail-table-columns'
+import { fetchEmailsFromImap } from '@/lib/mail'
+import { MailTable } from '@/components/mail-table'
 
 export const Route = createFileRoute('/mails/')({
   component: RouteComponent,
@@ -57,7 +56,7 @@ function RouteComponent() {
     <> 
     <div className='flex'>
       <div className="flex-1">
-        <DataTable columns={columns} data={formattedEmails} />
+        <MailTable data={formattedEmails} sent={false} />
       </div>
       <div className='flex-2'>
         <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText}/>

@@ -1,6 +1,5 @@
 import { MailSidebar } from '@/components/mail-sidebar'
-import { columnsSent } from '@/components/mail-table-columns'
-import { DataTable } from '@/components/ui/data-table'
+import { MailTable } from '@/components/mail-table'
 import { getFreshmanText } from '@/lib/freshman'
 import { fetchEmailsSent } from '@/lib/mail'
 import { getTrainers } from '@/lib/trainer'
@@ -56,7 +55,7 @@ function RouteComponent() {
     <> 
     <div className='flex'>
       <div className="flex-1">
-        <DataTable columns={columnsSent} data={formattedEmails} />
+        <MailTable data={formattedEmails} sent={true}/>
       </div>
       <div className='flex-2'>
         <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText}/>

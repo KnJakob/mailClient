@@ -1,5 +1,5 @@
 import { getFreshmanText } from '@/lib/freshman'
-import { getMailByUID } from '@/lib/mail'
+import { getMailBySeq } from '@/lib/mail'
 import { getTrainers } from '@/lib/trainer'
 import { getTrainingTimes } from '@/lib/training-times'
 import { createFileRoute } from '@tanstack/react-router'
@@ -15,7 +15,7 @@ export const Route = createFileRoute('/mails/$uid')({
       getTrainingTimes(),
       getTrainers(),
       getFreshmanText(),
-      getMailByUID({data: uid})
+      getMailBySeq({data: uid})
     ])
     return { trainingTimes, trainers, freshmanText, email }
   },
