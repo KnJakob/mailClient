@@ -19,6 +19,14 @@ export interface EmailData {
   }>
 }
 
+export interface EmailMetaData {
+  id: number
+  subject: string
+  from: string
+  to: string
+  date: string
+}
+
 interface FetchEmailsParams {
   beginFetch: number
   endFetch: number
@@ -52,10 +60,10 @@ export const fetchEmailsFromImap = createServerFn({method: 'POST'})
     }
     return data
   })
-  .handler(async ({ data }): Promise<EmailData[]> => {
+  .handler(async ({ data }): Promise<EmailMetaData[]> => {
   const { beginFetch = 1, endFetch = 50 } = data
   const client = createImapClient()
-  const emails: EmailData[] = []
+  const emails: EmailMetaData[] = []
 
   try {
     await client.connect()
@@ -79,25 +87,15 @@ export const fetchEmailsFromImap = createServerFn({method: 'POST'})
       // Nachrichten abrufen
       for await (const msg of client.fetch(
         { seq: `${safeBegin}:${safeEnd}` },
-        { source: true } // komplette Nachricht als Stream
+        { envelope: true } // nur Envelope
       )) {
-        const parsed = await simpleParser(msg.source)
-
         emails.push({
           id: msg.seq, // stabile ID
-          subject: parsed.subject || 'No Subject',
-          from: parsed.from?.text || 'Unknown Sender',
-          to: parsed.to?.text || 'Unknown Recipient',
-          date: parsed.date || new Date(),
-          body: parsed.text || '',
-          html: parsed.html || undefined,
-          attachments:
-            parsed.attachments?.map(att => ({
-              filename: att.filename || 'unnamed',
-              contentType: att.contentType || 'application/octet-stream',
-              size: att.size || 0
-            })) || []
-        })
+          subject: msg.envelope?.subject || 'No Subject',
+          from: msg.envelope?.from?.map(f => f.address).join(', ') || 'Unknown Sender',
+          to: msg.envelope?.to?.map(t => t.address).join(', ') || 'Unknown Recipient',
+          date: msg.envelope?.date?.toString() || new Date().toString(),
+        });
       }
     } finally {
       lock.release()
@@ -113,9 +111,9 @@ export const fetchEmailsFromImap = createServerFn({method: 'POST'})
 })
 
 export const getFlaggedMails = createServerFn({method: 'GET'})
-  .handler(async ({ data }): Promise<EmailData[]> => {
+  .handler(async ({ data }): Promise<EmailMetaData[]> => {
   const client = createImapClient()
-  const emails: EmailData[] = []
+  const emails: EmailMetaData[] = []
 
   try {
     await client.connect()
@@ -132,24 +130,17 @@ export const getFlaggedMails = createServerFn({method: 'GET'})
     try {
 
       // Nachrichten abrufen
-      for await (let msg of client.fetch(uids, { uid: true, source: true })) {
-        const parsed = await simpleParser(msg.source)
-
+      for await (const msg of client.fetch(
+        uids,
+        { uid: true, envelope: true } // nur Envelope
+      )) {
         emails.push({
           id: msg.seq, // stabile ID
-          subject: parsed.subject || 'No Subject',
-          from: parsed.from?.text || 'Unknown Sender',
-          to: parsed.to?.text || 'Unknown Recipient',
-          date: parsed.date || new Date(),
-          body: parsed.text || '',
-          html: parsed.html || undefined,
-          attachments:
-            parsed.attachments?.map(att => ({
-              filename: att.filename || 'unnamed',
-              contentType: att.contentType || 'application/octet-stream',
-              size: att.size || 0
-            })) || []
-        })
+          subject: msg.envelope?.subject || 'No Subject',
+          from: msg.envelope?.from?.map(f => f.address).join(', ') || 'Unknown Sender',
+          to: msg.envelope?.to?.map(t => t.address).join(', ') || 'Unknown Recipient',
+          date: msg.envelope?.date?.toString() || new Date().toString(),
+        });
       }
     } finally {
       lock.release()
@@ -232,10 +223,10 @@ export const fetchEmailsSent = createServerFn({method: 'POST'})
     }
     return data
   })
-  .handler(async ({ data }): Promise<EmailData[]> => {
+  .handler(async ({ data }): Promise<EmailMetaData[]> => {
   const { beginFetch = 1, endFetch = 50 } = data
   const client = createImapClient()
-  const emails: EmailData[] = []
+  const emails: EmailMetaData[] = []
 
   try {
     await client.connect()
@@ -259,24 +250,14 @@ export const fetchEmailsSent = createServerFn({method: 'POST'})
       // Nachrichten abrufen
       for await (const msg of client.fetch(
         { seq: `${safeBegin}:${safeEnd}` },
-        { source: true } // komplette Nachricht als Stream
+        { envelope: true } // komplette Nachricht als Stream
       )) {
-        const parsed = await simpleParser(msg.source)
-
         emails.push({
           id: msg.seq, // stabile ID
-          subject: parsed.subject || 'No Subject',
-          from: parsed.from?.text || 'Unknown Sender',
-          to: parsed.to?.text || 'Unknown Recipient',
-          date: parsed.date || new Date(),
-          body: parsed.text || '',
-          html: parsed.html || undefined,
-          attachments:
-            parsed.attachments?.map(att => ({
-              filename: att.filename || 'unnamed',
-              contentType: att.contentType || 'application/octet-stream',
-              size: att.size || 0
-            })) || []
+          subject: msg.envelope?.subject || 'No Subject',
+          from: msg.envelope?.from?.map(f => f.address).join(', ') || 'Unknown Sender',
+          to: msg.envelope?.to?.map(t => t.address).join(', ') || 'Unknown Recipient',
+          date: msg.envelope?.date?.toString() || new Date().toString(),
         })
       }
     } finally {

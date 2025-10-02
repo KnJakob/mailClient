@@ -9,10 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Link } from "@tanstack/react-router"
-import { EmailData } from "@/lib/mail"
+import { EmailMetaData } from "@/lib/mail"
 
 interface DataTableProps {
-  data: EmailData[]
+  data: EmailMetaData[]
   sent: boolean
 }
 
