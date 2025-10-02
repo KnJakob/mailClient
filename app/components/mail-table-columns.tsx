@@ -17,3 +17,18 @@ export const columns: ColumnDef<EmailData>[] = [
     header: "Datum",
   },
 ]
+
+export const columnsSent: ColumnDef<EmailData>[] = [
+  {
+    accessorKey: "to",
+    header: "Empfänger",
+  },
+  {
+    accessorKey: "subject",
+    header: "Betreff",
+  },
+  {
+    accessorKey: "date",
+    header: "Datum",
+  },
+]

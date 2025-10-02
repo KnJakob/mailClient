@@ -221,3 +221,73 @@ export const getMailByUID = createServerFn({method: 'POST'})
 
   return email
 })
+
+export const fetchEmailsSent = createServerFn({method: 'POST'})
+  .validator((data: FetchEmailsParams) => {
+    if (typeof data.beginFetch !== 'number' || typeof data.endFetch !== 'number') {
+      throw new Error('beginFetch und endFetch müssen Zahlen sein')
+    }
+    if (data.beginFetch < 1 || data.endFetch < data.beginFetch) {
+      throw new Error('Ungültiger Bereich für Email-Abruf')
+    }
+    return data
+  })
+  .handler(async ({ data }): Promise<EmailData[]> => {
+  const { beginFetch = 1, endFetch = 50 } = data
+  const client = createImapClient()
+  const emails: EmailData[] = []
+
+  try {
+    await client.connect()
+
+    // Posteingang öffnen
+    const lock = await client.getMailboxLock('Gesendet')
+    if (!client.mailbox) throw new Error("Mailbox not available")
+
+    try {
+      const total = client.mailbox.exists
+      if (total === 0) return []
+
+      const pageSize = endFetch - beginFetch + 1
+      const offset = beginFetch - 1 // 0-basiert
+
+      // Bereich validieren und anpassen
+      const safeEnd = total - offset
+      const safeBegin = Math.max(1, safeEnd - pageSize + 1)
+
+
+      // Nachrichten abrufen
+      for await (const msg of client.fetch(
+        { seq: `${safeBegin}:${safeEnd}` },
+        { source: true } // komplette Nachricht als Stream
+      )) {
+        const parsed = await simpleParser(msg.source)
+
+        emails.push({
+          id: msg.uid, // stabile ID
+          subject: parsed.subject || 'No Subject',
+          from: parsed.from?.text || 'Unknown Sender',
+          to: parsed.to?.text || 'Unknown Recipient',
+          date: parsed.date || new Date(),
+          body: parsed.text || '',
+          html: parsed.html || undefined,
+          attachments:
+            parsed.attachments?.map(att => ({
+              filename: att.filename || 'unnamed',
+              contentType: att.contentType || 'application/octet-stream',
+              size: att.size || 0
+            })) || []
+        })
+      }
+    } finally {
+      lock.release()
+    }
+  } catch (error) {
+      console.error('Fehler beim Abrufen der E-Mails:', error)
+      throw new Error(`E-Mail-Abruf fehlgeschlagen: ${error instanceof Error ? error.message : 'Unbekannter Fehler'}`)
+  } finally {
+    await client.logout()
+  }
+
+  return emails.sort((a, b) => b.id - a.id)
+})

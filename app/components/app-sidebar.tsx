@@ -32,7 +32,7 @@ const mail_items = [
   },
   {
     title: "Gesendet",
-    url: "/prank",
+    url: "/mails/sent",
     icon: Send,
   },
   {
