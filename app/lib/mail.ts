@@ -7,8 +7,8 @@ import { createServer } from 'node:http'
 export interface EmailData {
   id: number 
   subject: string
-  from: string
-  to: string
+  from: string[]
+  to: string[]
   date: string
   body: string
   html?: string
@@ -155,6 +155,11 @@ export const getFlaggedMails = createServerFn({method: 'GET'})
   return emails.sort((a, b) => b.id - a.id)
 })
 
+export function addressesOnly(field) {
+  return field?.value?.map(addr => addr.address) || [];
+}
+
+
 export const getMailBySeq = createServerFn({method: 'POST'})
   .validator((data: number) => {
     if (typeof data !== 'number') {
@@ -187,8 +192,8 @@ export const getMailBySeq = createServerFn({method: 'POST'})
       email = {
         id: fetched.uid,
         subject: parsed.subject || 'No Subject',
-        from: parsed.from?.text || 'Unknown Sender',
-        to: parsed.to?.text || 'Unknown Recipient',
+        from: addressesOnly(parsed.from) || ['Unknown Sender'],
+        to: addressesOnly(parsed.to) || ['Unknown Recipient'],
         date: parsed.date || new Date(),
         body: parsed.text || '',
         html: parsed.html || undefined,
