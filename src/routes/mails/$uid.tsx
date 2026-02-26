@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { Mail, User, ChevronDown, ArrowLeft, ArrowBigLeft } from 'lucide-react'
+import { Mail, User, ChevronDown, ArrowBigLeft } from 'lucide-react'
 import { MailSidebar } from '@/components/mail-sidebar'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -24,13 +24,16 @@ export const Route = createFileRoute('/mails/$uid')({
       mailbox: mailbox.length > 0 ? mailbox : undefined,
     }
   },
-  loader: async({params, search}) => {
+  loaderDeps: ({ search }) => ({
+    mailbox: search.mailbox || INBOX_MAILBOX,
+  }),
+  loader: async({params, deps}) => {
     const uid = parseInt(params.uid, 10)
     if (isNaN(uid)) {
       throw new Error('UID muss eine Zahl sein')
     }
 
-    const mailbox = search.mailbox || INBOX_MAILBOX
+    const mailbox = deps.mailbox
 
     const [trainingTimes, trainers, freshmanText, email] = await Promise.all([
       getTrainingTimes(),
@@ -47,6 +50,7 @@ function RouteComponent() {
   const { trainingTimes, trainers, freshmanText, email, mailbox } = Route.useLoaderData()
   const [isToOpen, setIsToOpen] = useState(false)
   const magicMailbox = MAGIC_MAILBOXES.find((item) => item.mailbox === mailbox)
+  const normalizedBody = typeof email.body === 'string' ? email.body.trim() : ''
   
   // Annahme: email.to könnte ein String oder Array sein
   const toRecipients = Array.isArray(email.to) ? email.to : email.to ? [email.to] : []
@@ -126,9 +130,15 @@ function RouteComponent() {
             
             <CardContent className="pt-6">
               <div className="prose prose-sm max-w-none">
-                <div className="whitespace-pre-line text-foreground leading-relaxed">
-                  {email.body}
-                </div>
+                {normalizedBody ? (
+                  <div className="whitespace-pre-line text-foreground leading-relaxed">
+                    {normalizedBody}
+                  </div>
+                ) : (
+                  <div className="text-sm text-muted-foreground">
+                    Kein lesbarer Nachrichtentext vorhanden.
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

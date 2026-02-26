@@ -250,6 +250,27 @@ export function addressesOnly(field) {
   return field?.value?.map(addr => addr.address) || [];
 }
 
+function normalizeHtmlContent(htmlValue: unknown) {
+  if (typeof htmlValue === 'string') {
+    return htmlValue
+  }
+
+  if (Buffer.isBuffer(htmlValue)) {
+    return htmlValue.toString('utf-8')
+  }
+
+  return undefined
+}
+
+function stripHtml(htmlValue: string) {
+  return htmlValue
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 
 export const getMailBySeq = createServerFn({method: 'POST'})
   .validator((data: GetMailBySeqParams) => {
@@ -294,14 +315,20 @@ export const getMailBySeq = createServerFn({method: 'POST'})
 
       const parsed = await simpleParser(fetched.source)
 
+      const fromAddresses = addressesOnly(parsed.from)
+      const toAddresses = addressesOnly(parsed.to)
+      const htmlBody = normalizeHtmlContent(parsed.html)
+      const textBody = typeof parsed.text === 'string' ? parsed.text.trim() : ''
+      const bodyFromHtml = htmlBody ? stripHtml(htmlBody) : ''
+
       email = {
         id: fetched.uid,
         subject: parsed.subject || 'No Subject',
-        from: addressesOnly(parsed.from) || ['Unknown Sender'],
-        to: addressesOnly(parsed.to) || ['Unknown Recipient'],
-        date: parsed.date || new Date(),
-        body: parsed.text || '',
-        html: parsed.html || undefined,
+        from: fromAddresses.length > 0 ? fromAddresses : ['Unknown Sender'],
+        to: toAddresses.length > 0 ? toAddresses : ['Unknown Recipient'],
+        date: parsed.date?.toString() || new Date().toString(),
+        body: textBody || bodyFromHtml,
+        html: htmlBody,
         attachments:
           parsed.attachments?.map(att => ({
             filename: att.filename || 'unnamed',

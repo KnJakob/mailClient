@@ -6,7 +6,7 @@ import type { EmailMetaData } from '@/lib/mail'
 const MAGIC_CATEGORIES = ['Probetraining', 'Meldebestätigung', 'Klärungsbedarf'] as const
 const INBOX_MAILBOX = 'INBOX'
 const MAGIC_TARGET_FOLDERS: Record<MagicCategory, string> = {
-  Probetraining: 'Anfrage Neulinge',
+  Probetraining: 'Anfragen Neulinge',
   Meldebestätigung: 'Meldungsbestätigungen',
   Klärungsbedarf: 'Klärungsbedarf',
 }
