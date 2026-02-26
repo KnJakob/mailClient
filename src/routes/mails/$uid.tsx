@@ -1,5 +1,6 @@
 import { getFreshmanText } from '@/lib/freshman'
 import { getMailBySeq } from '@/lib/mail'
+import { MAGIC_MAILBOXES } from '@/lib/magic-mailboxes'
 import { getTrainers } from '@/lib/trainer'
 import { getTrainingTimes } from '@/lib/training-times'
 import { createFileRoute, Link } from '@tanstack/react-router'
@@ -12,26 +13,40 @@ import { MailSidebar } from '@/components/mail-sidebar'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 
+const INBOX_MAILBOX = 'INBOX'
+
 export const Route = createFileRoute('/mails/$uid')({
   component: RouteComponent,
-  loader: async({params}) => {
+  validateSearch: (search: Record<string, unknown>) => {
+    const mailbox = typeof search.mailbox === 'string' ? search.mailbox.trim() : ''
+
+    return {
+      mailbox: mailbox.length > 0 ? mailbox : undefined,
+    }
+  },
+  loader: async({params, search}) => {
     const uid = parseInt(params.uid, 10)
     if (isNaN(uid)) {
       throw new Error('UID muss eine Zahl sein')
     }
+
+    const mailbox = search.mailbox || INBOX_MAILBOX
+
     const [trainingTimes, trainers, freshmanText, email] = await Promise.all([
       getTrainingTimes(),
       getTrainers(),
       getFreshmanText(),
-      getMailBySeq({data: uid})
+      getMailBySeq({data: { seq: uid, mailbox }})
     ])
-    return { trainingTimes, trainers, freshmanText, email }
+
+    return { trainingTimes, trainers, freshmanText, email, mailbox }
   },
 })
 
 function RouteComponent() {
-  const { trainingTimes, trainers, freshmanText, email } = Route.useLoaderData()
+  const { trainingTimes, trainers, freshmanText, email, mailbox } = Route.useLoaderData()
   const [isToOpen, setIsToOpen] = useState(false)
+  const magicMailbox = MAGIC_MAILBOXES.find((item) => item.mailbox === mailbox)
   
   // Annahme: email.to könnte ein String oder Array sein
   const toRecipients = Array.isArray(email.to) ? email.to : email.to ? [email.to] : []
@@ -42,10 +57,22 @@ function RouteComponent() {
       <div className="flex-1 overflow-auto">
         <div className="flex items-center gap-4">
           <Button variant="outline" asChild>
-            <Link to="/mails" className="flex items-center gap-2">
-              <ArrowBigLeft className="h-5 w-5" />
-              <span>Zurück zur Übersicht</span>
-            </Link>
+            {mailbox === 'Gesendet' ? (
+              <Link to="/mails/sent" className="flex items-center gap-2">
+                <ArrowBigLeft className="h-5 w-5" />
+                <span>Zurück zur Übersicht</span>
+              </Link>
+            ) : magicMailbox ? (
+              <Link to="/mails/magic/$mailbox" params={{ mailbox: magicMailbox.slug }} className="flex items-center gap-2">
+                <ArrowBigLeft className="h-5 w-5" />
+                <span>Zurück zur Übersicht</span>
+              </Link>
+            ) : (
+              <Link to="/mails" className="flex items-center gap-2">
+                <ArrowBigLeft className="h-5 w-5" />
+                <span>Zurück zur Übersicht</span>
+              </Link>
+            )}
           </Button>
 
           <div className="flex items-center gap-2 text-muted-foreground">

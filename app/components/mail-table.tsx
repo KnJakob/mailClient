@@ -17,9 +17,10 @@ interface DataTableProps {
   data: EmailMetaData[]
   sent: boolean
   onMagicClick?: (email: EmailMetaData) => void | Promise<void>
+  detailMailbox?: string
 }
 
-export function MailTable({ data, sent, onMagicClick }: DataTableProps) {
+export function MailTable({ data, sent, onMagicClick, detailMailbox }: DataTableProps) {
   const hasMagicAction = typeof onMagicClick === "function"
   const [magicInProgressId, setMagicInProgressId] = useState<number | null>(null)
 
@@ -63,7 +64,12 @@ export function MailTable({ data, sent, onMagicClick }: DataTableProps) {
                   <TableCell>{email.from}</TableCell>
                   )}
                   <TableCell className="text-semibold">
-                    <Link to="/mails/$uid" params={{uid: email.id.toString()}} className="text-semibold">
+                    <Link
+                      to="/mails/$uid"
+                      params={{uid: email.id.toString()}}
+                      search={detailMailbox ? { mailbox: detailMailbox } : {}}
+                      className="text-semibold"
+                    >
                       {email.subject}
                     </Link>
                   </TableCell>

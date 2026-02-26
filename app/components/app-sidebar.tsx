@@ -1,4 +1,4 @@
-import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Send, Star, Trophy, Users } from "lucide-react"
+import { Archive, Calendar, ChevronDown, Home, Inbox, PartyPopper, Send, Sparkles, Star, Trophy, Users } from "lucide-react"
 
 import {
   Sidebar,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Link } from "@tanstack/react-router"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible"
+import { MAGIC_MAILBOXES } from "@/lib/magic-mailboxes"
 
 // Menu items.
 const mail_items = [
@@ -86,6 +87,32 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <Collapsible defaultOpen className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger>
+                Magic
+                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {MAGIC_MAILBOXES.map((item) => (
+                    <SidebarMenuItem key={item.slug}>
+                      <SidebarMenuButton asChild>
+                        <Link to="/mails/magic/$mailbox" params={{ mailbox: item.slug }}>
+                          <Sparkles />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
         <Collapsible defaultOpen className="group/collapsible">
         <SidebarGroup>
             <SidebarGroupLabel asChild>

@@ -55,7 +55,7 @@ function RouteComponent() {
     <> 
     <div className='flex'>
       <div className="flex-1">
-        <MailTable data={formattedEmails} sent={true}/>
+        <MailTable data={formattedEmails} sent={true} detailMailbox="Gesendet"/>
       </div>
       <div className='flex-2'>
         <MailSidebar trainingTimes={trainingTimes} trainers={trainers} freshmanText={freshmanText}/>

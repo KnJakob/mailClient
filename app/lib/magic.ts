@@ -5,6 +5,11 @@ import type { EmailMetaData } from '@/lib/mail'
 
 const MAGIC_CATEGORIES = ['Probetraining', 'Meldebestätigung', 'Klärungsbedarf'] as const
 const INBOX_MAILBOX = 'INBOX'
+const MAGIC_TARGET_FOLDERS: Record<MagicCategory, string> = {
+  Probetraining: 'Anfrage Neulinge',
+  Meldebestätigung: 'Meldungsbestätigungen',
+  Klärungsbedarf: 'Klärungsbedarf',
+}
 
 type MagicCategory = (typeof MAGIC_CATEGORIES)[number]
 
@@ -274,7 +279,7 @@ export const runMagic = createServerFn({ method: 'POST' })
 
       const mail = await getMailForMagic(client, data.seq)
       const classification = classifyByKeywords(mail)
-      const targetFolder = classification.category
+      const targetFolder = MAGIC_TARGET_FOLDERS[classification.category]
 
       await moveMailToFolder(client, mail.uid, targetFolder)
 

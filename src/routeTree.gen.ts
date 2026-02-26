@@ -18,6 +18,7 @@ import { Route as MailsIndexRouteImport } from './routes/mails/index'
 import { Route as MailsSentRouteImport } from './routes/mails/sent'
 import { Route as MailsFavoritesRouteImport } from './routes/mails/favorites'
 import { Route as MailsUidRouteImport } from './routes/mails/$uid'
+import { Route as MailsMagicMailboxRouteImport } from './routes/mails/magic/$mailbox'
 
 const TrainingTimesRoute = TrainingTimesRouteImport.update({
   id: '/training-times',
@@ -64,6 +65,11 @@ const MailsUidRoute = MailsUidRouteImport.update({
   path: '/mails/$uid',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MailsMagicMailboxRoute = MailsMagicMailboxRouteImport.update({
+  id: '/mails/magic/$mailbox',
+  path: '/mails/magic/$mailbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/mails/favorites': typeof MailsFavoritesRoute
   '/mails/sent': typeof MailsSentRoute
   '/mails': typeof MailsIndexRoute
+  '/mails/magic/$mailbox': typeof MailsMagicMailboxRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/mails/favorites': typeof MailsFavoritesRoute
   '/mails/sent': typeof MailsSentRoute
   '/mails': typeof MailsIndexRoute
+  '/mails/magic/$mailbox': typeof MailsMagicMailboxRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/mails/favorites': typeof MailsFavoritesRoute
   '/mails/sent': typeof MailsSentRoute
   '/mails/': typeof MailsIndexRoute
+  '/mails/magic/$mailbox': typeof MailsMagicMailboxRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/mails/favorites'
     | '/mails/sent'
     | '/mails'
+    | '/mails/magic/$mailbox'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/mails/favorites'
     | '/mails/sent'
     | '/mails'
+    | '/mails/magic/$mailbox'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/mails/favorites'
     | '/mails/sent'
     | '/mails/'
+    | '/mails/magic/$mailbox'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   MailsFavoritesRoute: typeof MailsFavoritesRoute
   MailsSentRoute: typeof MailsSentRoute
   MailsIndexRoute: typeof MailsIndexRoute
+  MailsMagicMailboxRoute: typeof MailsMagicMailboxRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MailsUidRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mails/magic/$mailbox': {
+      id: '/mails/magic/$mailbox'
+      path: '/mails/magic/$mailbox'
+      fullPath: '/mails/magic/$mailbox'
+      preLoaderRoute: typeof MailsMagicMailboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   MailsFavoritesRoute: MailsFavoritesRoute,
   MailsSentRoute: MailsSentRoute,
   MailsIndexRoute: MailsIndexRoute,
+  MailsMagicMailboxRoute: MailsMagicMailboxRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
